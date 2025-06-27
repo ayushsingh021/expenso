@@ -3,8 +3,9 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { Expense } from "../models/expense.model.js";
 import jwt from "jsonwebtoken";
-
+import dayjs from "dayjs";
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -121,7 +122,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({
     $or: [{ username }, { email }],
   });
-  console.log(user);
+
   //3.find the user
   if (!user) {
     throw new ApiError(404, "User does not exist");
@@ -296,6 +297,78 @@ const editUserAvatar = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "Avatar Updated Successfully"));
 });
 
+const getAllUserExpense = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const expenses = await Expense.find({ userId }).sort({ transactionDate: -1 });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, expenses, "All expenses fetched successfully"));
+});
+
+const getExpenseSummary = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const now = dayjs();
+  const startOfWeek = now.startOf("week").toDate();
+  const startOfMonth = now.startOf("month").toDate();
+  const startOfYear = now.startOf("year").toDate();
+
+  const [weekly, monthly, yearly] = await Promise.all([
+    Expense.aggregate([
+      { $match: { userId, transactionDate: { $gte: startOfWeek } } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]),
+    Expense.aggregate([
+      { $match: { userId, transactionDate: { $gte: startOfMonth } } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]),
+    Expense.aggregate([
+      { $match: { userId, transactionDate: { $gte: startOfYear } } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]),
+  ]);
+
+  const result = {
+    weeklyExpense: weekly[0]?.total || 0,
+    monthlyExpense: monthly[0]?.total || 0,
+    yearlyExpense: yearly[0]?.total || 0,
+  };
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, result, "Expense summary fetched"));
+});
+
+const getCategoryWiseExpense = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const categorySummary = await Expense.aggregate([
+    { $match: { userId } },
+    {
+      $group: {
+        _id: "$category",
+        total: { $sum: "$amount" },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { total: -1 } },
+  ]);
+
+  const formatted = categorySummary.map((item) => ({
+    category: item._id,
+    total: item.total,
+    count: item.count,
+  }));
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, formatted, "Category-wise expense summary fetched")
+    );
+});
+
 export {
   registerUser,
   loginUser,
@@ -305,4 +378,7 @@ export {
   getCurrentUser,
   updateAccountDetails,
   editUserAvatar,
+  getExpenseSummary,
+  getCategoryWiseExpense,
+  getAllUserExpense,
 };
