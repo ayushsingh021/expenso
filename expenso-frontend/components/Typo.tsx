@@ -10,12 +10,14 @@ const Typo = ({
   fontWeight = "400",
   children,
   style,
+  textTransform = "none",
   textProps = {},
 }: TypoProps) => {
   const textStyle = {
     fontSize: size ? verticalScale(size) : verticalScale(18),
     color,
     fontWeight,
+    textTransform
   };
   return (
     <Text style={[textStyle, style]} {...textProps}>

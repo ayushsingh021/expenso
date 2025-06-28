@@ -38,6 +38,7 @@ export type TypoProps = {
   children: any | null;
   style?: TextStyle;
   textProps?: TextProps;
+  textTransform?: TextStyle["textTransform"];
 };
 
 export type IconComponent = React.ComponentType<{
