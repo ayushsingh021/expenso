@@ -4,7 +4,6 @@ import { Expense } from "../models/expense.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import axios from "axios";
 
-
 const createExpense = asyncHandler(async (req, res) => {
   //logic
   // 1. get expense details from frontend
@@ -65,9 +64,12 @@ const createExpenseFromMessage = asyncHandler(async (req, res) => {
     const response = await axios.post("http://127.0.0.1:8000/api/v1/message", {
       message,
     });
-
+    
     if (response.data.status !== "success") {
       throw new ApiError(500, "Failed to parse message from AI");
+    }
+    if (response.data.data === null || response.data.data === undefined) {
+      throw new ApiError(400, "Not a payment message");
     }
 
     const {
@@ -211,8 +213,6 @@ const getExpenseById = asyncHandler(async (req, res) => {
     .json(new ApiResponse("Expense fetched successfully", expense));
 });
 
-
-
 const updateExpenseDetails = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -275,5 +275,4 @@ export {
   getExpenseById,
   updateExpenseDetails,
   deleteExpense,
- 
 };

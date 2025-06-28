@@ -6,6 +6,10 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Expense } from "../models/expense.model.js";
 import jwt from "jsonwebtoken";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
+
+dayjs.extend(utc);
+
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -310,7 +314,7 @@ const getAllUserExpense = asyncHandler(async (req, res) => {
 const getExpenseSummary = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
-  const now = dayjs();
+  const now = dayjs().utc();
   const startOfWeek = now.startOf("week").toDate();
   const startOfMonth = now.startOf("month").toDate();
   const startOfYear = now.startOf("year").toDate();

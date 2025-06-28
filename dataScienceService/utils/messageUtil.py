@@ -22,7 +22,7 @@ class MessageFilter:
 
         # Common OTP/login keywords
         otp_patterns = [
-            r"\botp\b", r"\bone time password\b", r"\blogin\b", r"\bdo not share\b",
+            r"\botp\b", r"\bcredited\b", r"\bCredited\b", r"\bone time password\b", r"\blogin\b", r"\bdo not share\b",
             r"\byour.*otp\b", r"\buse.*otp\b"
         ]
         if any(re.search(pattern, message_lower) for pattern in otp_patterns):
