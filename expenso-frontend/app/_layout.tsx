@@ -1,11 +1,20 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet } from "react-native";
+import React, { useEffect } from "react";
 import { Stack } from "expo-router";
+import { useAuthStore } from "@/store/authStore";
 
-const _layout = () => {
-  return <Stack screenOptions={{ headerShown: false }}></Stack>;
+const StackLayout = () => {
+  return <Stack screenOptions={{ headerShown: false }} />;
 };
 
-export default _layout;
+export default function RootLayout() {
+  const initialize = useAuthStore((s) => s.initialize);
+
+  useEffect(() => {
+    initialize(); // Trigger auto-login on app launch
+  }, []);
+
+  return <StackLayout />;
+}
 
 const styles = StyleSheet.create({});
