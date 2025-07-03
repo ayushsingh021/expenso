@@ -158,11 +158,20 @@ export type ImageUploadProps = {
   placeholder?: string;
 };
 
+// export type UserType = {
+//   uid?: string;
+//   email?: string | null;
+//   name: string | null;
+//   image?: any;
+// } | null;
 export type UserType = {
-  uid?: string;
-  email?: string | null;
-  name: string | null;
-  image?: any;
+  _id: string;
+  fullName: string;
+  username: string;
+  email: string;
+  avatar?: string | "";
+  createdAt?: string;
+  updatedAt?: string;
 } | null;
 
 export type UserDataType = {
@@ -170,19 +179,25 @@ export type UserDataType = {
   image?: any;
 };
 
-export type AuthContextType = {
+// export type AuthContextType = {
+//   user: UserType;
+//   setUser: Function;
+//   login: (
+//     email: string,
+//     password: string
+//   ) => Promise<{ success: boolean; msg?: string }>;
+//   register: (
+//     email: string,
+//     password: string,
+//     name: string
+//   ) => Promise<{ success: boolean; msg?: string }>;
+//   updateUserData: (userId: string) => Promise<void>;
+// };
+
+export type AuthResponseType = {
   user: UserType;
-  setUser: Function;
-  login: (
-    email: string,
-    password: string
-  ) => Promise<{ success: boolean; msg?: string }>;
-  register: (
-    email: string,
-    password: string,
-    name: string
-  ) => Promise<{ success: boolean; msg?: string }>;
-  updateUserData: (userId: string) => Promise<void>;
+  accessToken: string;
+  refreshToken: string;
 };
 
 export type ResponseType = {
