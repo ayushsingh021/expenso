@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import Typo from "@/components/Typo";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "expo-router";
+import ScreenWrapper from "@/components/ScreenWrapper";
 
 const Home = () => {
   const logout = useAuthStore((state) => state.logout);
@@ -20,12 +21,12 @@ const Home = () => {
   };
 
   return (
-    <View>
-      <Text>Home</Text>
+    <ScreenWrapper>
+      <Typo>Home</Typo>
       <Button onPress={handleLogout}>
         <Typo>Logout</Typo>
       </Button>
-    </View>
+    </ScreenWrapper>
   );
 };
 
