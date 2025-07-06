@@ -7,25 +7,9 @@ import { useRouter } from "expo-router";
 import ScreenWrapper from "@/components/ScreenWrapper";
 
 const Home = () => {
-  const logout = useAuthStore((state) => state.logout);
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-
-      router.replace("/(auth)/login");
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
-  };
-
   return (
     <ScreenWrapper>
       <Typo>Home</Typo>
-      <Button onPress={handleLogout}>
-        <Typo>Logout</Typo>
-      </Button>
     </ScreenWrapper>
   );
 };

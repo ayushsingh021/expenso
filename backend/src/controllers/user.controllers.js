@@ -99,7 +99,9 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
   });
   //7. remove password and refresh tokens field form response
-
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
@@ -111,7 +113,19 @@ const registerUser = asyncHandler(async (req, res) => {
   //9. return response
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User registered successfully"));
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(
+        201,
+        {
+          user: createdUser,
+          accessToken,
+          refreshToken,
+        },
+        "User registered successfully"
+      )
+    );
 });
 
 const loginUser = asyncHandler(async (req, res) => {
