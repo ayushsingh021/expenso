@@ -24,7 +24,6 @@ import expenseRouter from "./routes/expense.routes.js";
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/expenses", expenseRouter);
 
-
 //global error handler -- must be at the end of all routes
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

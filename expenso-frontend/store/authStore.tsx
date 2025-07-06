@@ -2,7 +2,7 @@ import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-const API_BASE_URL = "http://192.168.120.242:4000/api/v1";
+const API_BASE_URL = "http://192.168.250.242:4000/api/v1";
 
 // ----------- Types -----------
 interface User {
