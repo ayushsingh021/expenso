@@ -48,12 +48,12 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         withCredentials: true,
       });
 
-      const { user } = res.data.data;
+      const { user, accessToken, refreshToken } = res.data.data;
 
-      //   await AsyncStorage.setItem("accessToken", accessToken);
-      //   await AsyncStorage.setItem("refreshToken", refreshToken);
+      await AsyncStorage.setItem("accessToken", accessToken);
+      await AsyncStorage.setItem("refreshToken", refreshToken);
 
-      set({ user });
+      set({ user, token: accessToken });
     } catch (err) {
       throw err;
     } finally {
