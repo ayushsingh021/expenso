@@ -61,10 +61,10 @@ const createExpenseFromMessage = asyncHandler(async (req, res) => {
 
   try {
     // Call FastAPI
-    const response = await axios.post("http://127.0.0.1:8000/api/v1/message", {
+    const response = await axios.post("http://3.236.31.3:8000/api/v1/message", {
       message,
     });
-    
+
     if (response.data.status !== "success") {
       throw new ApiError(500, "Failed to parse message from AI");
     }
